@@ -1,0 +1,90 @@
+-- do not sell this src
+-- custom font
+
+--[[
+
+$$\      $$\  $$$$$$\  $$$$$$$\  $$$$$$$$\       $$$$$$$\ $$\     $$\       $$$$$$$$\ $$\   $$\ $$\     $$\                             
+$$$\    $$$ |$$  __$$\ $$  __$$\ $$  _____|      $$  __$$\\$$\   $$  |      \____$$  |$$ |  $$ |\$$\   $$  |                            
+$$$$\  $$$$ |$$ /  $$ |$$ |  $$ |$$ |            $$ |  $$ |\$$\ $$  /           $$  / $$ |  $$ | \$$\ $$  /                             
+$$\$$\$$ $$ |$$$$$$$$ |$$ |  $$ |$$$$$\          $$$$$$$\ | \$$$$  /           $$  /  $$$$$$$$ |  \$$$$  /                              
+$$ \$$$  $$ |$$  __$$ |$$ |  $$ |$$  __|         $$  __$$\   \$$  /           $$  /   $$  __$$ |   \$$  /                               
+$$ |\$  /$$ |$$ |  $$ |$$ |  $$ |$$ |            $$ |  $$ |   $$ |           $$  /    $$ |  $$ |    $$ |                                
+$$ | \_/ $$ |$$ |  $$ |$$$$$$$  |$$$$$$$$\       $$$$$$$  |   $$ |          $$$$$$$$\ $$ |  $$ |    $$ |                                
+\__|     \__|\__|  \__|\_______/ \________|      \_______/    \__|          \________|\__|  \__|    \__|                                
+                                                                                                                                        
+                                                                                                                                        
+                                                                                                                                        
+          $$\                  $$$$$$\                                        $$\ $$\                                               $$\ 
+          $$ |                $$  __$$\                                       $$ |\__|                                              $$ |
+$$$$$$$$\ $$$$$$$\  $$\   $$\ $$ /  $$ |       $$$$$$\  $$$$$$$\         $$$$$$$ |$$\  $$$$$$$\  $$$$$$$\  $$$$$$\   $$$$$$\   $$$$$$$ |
+\____$$  |$$  __$$\ $$ |  $$ |\$$$$$$$ |      $$  __$$\ $$  __$$\       $$  __$$ |$$ |$$  _____|$$  _____|$$  __$$\ $$  __$$\ $$  __$$ |
+  $$$$ _/ $$ |  $$ |$$ |  $$ | \____$$ |      $$ /  $$ |$$ |  $$ |      $$ /  $$ |$$ |\$$$$$$\  $$ /      $$ /  $$ |$$ |  \__|$$ /  $$ |
+ $$  _/   $$ |  $$ |$$ |  $$ |$$\   $$ |      $$ |  $$ |$$ |  $$ |      $$ |  $$ |$$ | \____$$\ $$ |      $$ |  $$ |$$ |      $$ |  $$ |
+$$$$$$$$\ $$ |  $$ |\$$$$$$$ |\$$$$$$  |      \$$$$$$  |$$ |  $$ |      \$$$$$$$ |$$ |$$$$$$$  |\$$$$$$$\ \$$$$$$  |$$ |      \$$$$$$$ |
+\________|\__|  \__| \____$$ | \______/        \______/ \__|  \__|       \_______|\__|\_______/  \_______| \______/ \__|       \_______|
+                    $$\   $$ |                                                                                                          
+                    \$$$$$$  |                                                                                                          
+                     \______/                                                                                                           
+
+--]]
+
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local LocalPlayer = Players.LocalPlayer
+local http_service = game:GetService("HttpService")
+local library = {}
+
+writefile("main.ttf", game:HttpGet("https://github.com/zhy1s/storage/raw/refs/heads/main/ProggyTiny.ttf")) 
+local special_sauce = {
+    name = "cool_boy",
+    faces = {
+        {
+            name = "Regular",
+            weight = 400,
+            style = "normal",
+            assetId = getcustomasset("main.ttf")  
+        }
+    }
+}
+
+writefile("main_encoded.ttf", http_service:JSONEncode(special_sauce))
+
+-- font var
+library.font = Font.new(getcustomasset("main_encoded.ttf"), Enum.FontWeight.Regular)
+
+-- func too add the name tag
+local function name_esp1(player)
+    if player == LocalPlayer then return end
+
+    local character = player.Character or player.CharacterAdded:Wait()
+    local head = character:WaitForChild("Head")
+
+    local billboardGui = Instance.new("BillboardGui")
+    billboardGui.Name = "NameESP"
+    billboardGui.Adornee = head
+    billboardGui.Size = UDim2.new(0, 100, 0, 25) 
+    billboardGui.StudsOffset = Vector3.new(0, 1.5, 0) -- offsets
+    billboardGui.AlwaysOnTop = true -- put false if you just wanna see it when the player is visible (wall check)
+-- font settings
+    local Label_Tag_Or_sum = Instance.new("TextLabel")
+    Label_Tag_Or_sum.Parent = billboardGui
+    Label_Tag_Or_sum.Size = UDim2.new(1, 0, 1, 0)
+    Label_Tag_Or_sum.BackgroundTransparency = 1
+    Label_Tag_Or_sum.TextColor3 = Color3.fromRGB(255, 255, 255)
+    Label_Tag_Or_sum.TextStrokeTransparency = 0.5
+    Label_Tag_Or_sum.Text = player.Name
+    Label_Tag_Or_sum.FontFace = library.font
+    Label_Tag_Or_sum.TextSize = 25
+    -- where the thing will display
+    billboardGui.Parent = head
+end
+-- add esp
+for _, player in pairs(Players:GetPlayers()) do
+    name_esp1(player)
+end
+-- adds too new players
+Players.PlayerAdded:Connect(function(player)
+    player.CharacterAdded:Connect(function()
+        name_esp1(player)
+    end)
+end)
