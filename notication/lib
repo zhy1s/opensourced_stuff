@@ -1,0 +1,99 @@
+-- typewriter animation
+
+
+--[[
+
+$$\      $$\  $$$$$$\  $$$$$$$\  $$$$$$$$\       $$$$$$$\ $$\     $$\       $$$$$$$$\ $$\   $$\ $$\     $$\                             
+$$$\    $$$ |$$  __$$\ $$  __$$\ $$  _____|      $$  __$$\\$$\   $$  |      \____$$  |$$ |  $$ |\$$\   $$  |                            
+$$$$\  $$$$ |$$ /  $$ |$$ |  $$ |$$ |            $$ |  $$ |\$$\ $$  /           $$  / $$ |  $$ | \$$\ $$  /                             
+$$\$$\$$ $$ |$$$$$$$$ |$$ |  $$ |$$$$$\          $$$$$$$\ | \$$$$  /           $$  /  $$$$$$$$ |  \$$$$  /                              
+$$ \$$$  $$ |$$  __$$ |$$ |  $$ |$$  __|         $$  __$$\   \$$  /           $$  /   $$  __$$ |   \$$  /                               
+$$ |\$  /$$ |$$ |  $$ |$$ |  $$ |$$ |            $$ |  $$ |   $$ |           $$  /    $$ |  $$ |    $$ |                                
+$$ | \_/ $$ |$$ |  $$ |$$$$$$$  |$$$$$$$$\       $$$$$$$  |   $$ |          $$$$$$$$\ $$ |  $$ |    $$ |                                
+\__|     \__|\__|  \__|\_______/ \________|      \_______/    \__|          \________|\__|  \__|    \__|                                
+                                                                                                                                        
+                                                                                                                                        
+                                                                                                                                        
+          $$\                  $$$$$$\                                        $$\ $$\                                               $$\ 
+          $$ |                $$  __$$\                                       $$ |\__|                                              $$ |
+$$$$$$$$\ $$$$$$$\  $$\   $$\ $$ /  $$ |       $$$$$$\  $$$$$$$\         $$$$$$$ |$$\  $$$$$$$\  $$$$$$$\  $$$$$$\   $$$$$$\   $$$$$$$ |
+\____$$  |$$  __$$\ $$ |  $$ |\$$$$$$$ |      $$  __$$\ $$  __$$\       $$  __$$ |$$ |$$  _____|$$  _____|$$  __$$\ $$  __$$\ $$  __$$ |
+  $$$$ _/ $$ |  $$ |$$ |  $$ | \____$$ |      $$ /  $$ |$$ |  $$ |      $$ /  $$ |$$ |\$$$$$$\  $$ /      $$ /  $$ |$$ |  \__|$$ /  $$ |
+ $$  _/   $$ |  $$ |$$ |  $$ |$$\   $$ |      $$ |  $$ |$$ |  $$ |      $$ |  $$ |$$ | \____$$\ $$ |      $$ |  $$ |$$ |      $$ |  $$ |
+$$$$$$$$\ $$ |  $$ |\$$$$$$$ |\$$$$$$  |      \$$$$$$  |$$ |  $$ |      \$$$$$$$ |$$ |$$$$$$$  |\$$$$$$$\ \$$$$$$  |$$ |      \$$$$$$$ |
+\________|\__|  \__| \____$$ | \______/        \______/ \__|  \__|       \_______|\__|\_______/  \_______| \______/ \__|       \_______|
+                    $$\   $$ |                                                                                                          
+                    \$$$$$$  |                                                                                                          
+                     \______/                                                                                                           
+
+--]]
+
+
+
+
+
+
+
+local RunService = game:GetService("RunService")
+local http_service = game:GetService("HttpService")
+local library = {}
+
+writefile("main.ttf", game:HttpGet("https://github.com/zhy1s/storage/raw/refs/heads/main/ProggyTiny.ttf")) 
+local special_sauce = {
+    name = "cool_boy",
+    faces = {
+        {
+            name = "Regular",
+            weight = 400,
+            style = "normal",
+            assetId = getcustomasset("main.ttf")  
+        }
+    }
+}
+writefile("main_encoded.ttf", http_service:JSONEncode(special_sauce))
+library.font = Font.new(getcustomasset("main_encoded.ttf"), Enum.FontWeight.Regular)
+
+local Player = game.Players.LocalPlayer
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Parent = Player:WaitForChild("PlayerGui")
+
+local function notify(text)
+    local text_in = Instance.new("TextLabel")
+    text_in.Size = UDim2.new(0, 400, 0, 50)
+    text_in.Position = UDim2.new(0.5, 0, 1, -100)
+    text_in.AnchorPoint = Vector2.new(0.5, 1)
+    text_in.BackgroundTransparency = 1
+    text_in.TextColor3 = Color3.fromRGB(255, 255, 255)
+    text_in.TextSize = 24
+    text_in.Text = "" -- dont add anything here
+    text_in.FontFace = library.font
+    text_in.Parent = ScreenGui
+
+    local function typewriter_ani(text)
+        local cur_text = "" -- dont add anything here
+        text_in.Text = text
+        text_in.Size = UDim2.new(0, text_in.TextBounds.X, 0, 50)
+
+        for i = 1, #text do
+            cur_text = cur_text .. text:sub(i, i)
+            text_in.Text = cur_text
+            wait(0.05)
+        end
+    end
+
+    typewriter_ani(text)
+
+    wait(3) -- change this ifyw
+
+    for i = #text, 1, -1 do
+        text_in.Text = text:sub(1, i)
+        wait(0.05)
+    end
+
+    text_in:Destroy()
+end
+
+
+notify("efsawfsawfsa") 
+
+notify("bobobob") 
